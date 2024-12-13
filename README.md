@@ -1,81 +1,83 @@
-# DWIN USDDW White Paper Project
+# USDDWIN Smart Contract Repository
 
-This repository contains the white paper and supporting documentation for the **USDDW Stablecoin** developed by **Dwin Trust Limited**. USDDW is a fiat-pegged stablecoin built on the Ethereum blockchain, providing transparency, security, and reliability in digital asset management.
+USDDWIN is a digital token designed to provide a secure, stable, and decentralized means of value exchange, leveraging blockchain technology for transparency and trust. This repository contains the source code for the USDDWIN token and associated smart contracts.
 
----
+## Overview
+USDDWIN represents a fiat-pegged cryptocurrency built on the Ethereum blockchain. Each USDDWIN token is backed by real-world assets at a 1:1 ratio, ensuring stability and security.
 
-## Project Overview
+Key features:
+- **Decentralized and Transparent:** Built on Ethereum with auditable reserves.
+- **Stable Value:** Pegged 1:1 with USD.
+- **Low Fees:** Minimal transaction costs compared to traditional systems.
+- **Secure Transactions:** Cryptographically secure peer-to-peer exchanges.
 
-The **USDDW Stablecoin** aims to address challenges in cross-border payments, financial asset management, and stable currency trading. Key features include:
+## Smart Contract Features
+The USDDWIN smart contracts include:
+- **ERC-20 Token Compliance:** Ensures compatibility with the Ethereum ecosystem.
+- **Proof of Reserves:** Verifies that every token is fully backed by fiat currency.
+- **Mint and Burn Mechanisms:** Tokens are created or removed from circulation based on fiat reserves.
+- **Transparency:** Reserves are audited and publicly reported on the blockchain.
 
-- **Fiat-Pegged Stability**: 1 USDDW = 1 USD, fully backed by fiat reserves.
-- **Transparency**: Proof of Reserves mechanism with regular audits.
-- **Integration**: Works seamlessly with platforms like MetaMask, Uniswap, and other Ethereum-compatible wallets.
-- **Security**: Built on the Ethereum blockchain with cryptographic safeguards.
+## Key Benefits
+- **Global Accessibility:** Enables rapid cross-border payments.
+- **User-Friendly:** Simplified processes for non-technical users.
+- **Enhanced Security:** Transactions are trustless, reducing counterparty risks.
+- **Integration Ready:** Seamlessly integrates with wallets, exchanges, and merchants.
 
----
-
-## Key Features
-
-1. **Stability**:  
-   USDDW maintains a 1:1 reserve ratio with fiat currency held in a trusted custodian account.
-
-2. **Transparency**:  
-   Regular audits and weekly asset reports are submitted to the Labuan Financial Services Authority (LOFSA).
-
-3. **Security**:  
-   Uses Ethereum blockchain technology and Chainlink protocols for reliable transactions and token issuance.
-
-4. **Ease of Use**:  
-   Multiple payment and withdrawal options, including:
-   - PayPal
-   - Ethereum (ETH)
-   - Bitcoin (BTC)
-   - Bank transfers
-
----
+## Technology Stack
+- **Blockchain Platform:** Ethereum
+- **Token Standard:** ERC-20
+- **Proof of Reserves System:** Audited by professional firms, with results published to the blockchain.
+- **Wallet Compatibility:** Supports wallets such as MetaMask, Uniswap, and Binance.
 
 ## How It Works
+1. **Issuance:** Fiat currency is deposited into a custodian account and an equivalent amount of USDDWIN tokens is minted.
+2. **Transactions:** Tokens can be transferred, exchanged, or stored via wallets and exchanges.
+3. **Redemption:** Tokens can be burned in exchange for fiat currency from the custodian account.
 
-1. **Acquiring USDDW**:  
-   - Transfer fiat or cryptocurrency to Dwin Trust Limited.
-   - Receive USDDW tokens in return.
+<!-- ## Flow Diagram
+![Flow Diagram](path/to/flow-diagram.png) -->
 
-2. **Using USDDW**:  
-   - Store, transfer, or trade USDDW via Ethereum-compatible wallets like MetaMask or Uniswap.
+## Getting Started
+### Prerequisites
+- Node.js and npm
+- Hardhat
 
-3. **Redeeming USDDW**:  
-   - Return USDDW tokens to Dwin Trust Limited.
-   - Receive the equivalent amount in fiat currency or Ethereum.
+### Installation
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/dwinno-fin/DWINToken
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd DWINToken
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
 
----
+<!-- ### Deployment
+1. Configure the Ethereum network in `hardhat.config.js`.
+2. Deploy the contracts:
+   ```bash
+   npx hardhat run scripts/deploy.js --network [network_name]
+   ``` -->
 
-## Benefits
+### Testing
+Run the tests using:
+```bash
+npx hardhat test
+```
 
-- Low transaction fees
-- Borderless payments
-- Reduced volatility
-- Pseudo-anonymous and secure transactions
-- Real-time transparency and auditability
-
----
-
-## Limitations
-
-- Centralized custodian model
-- High minimum entry requirements for some services
-- Dependence on Labuan jurisdiction for regulatory compliance
-
----
+## Contributing
+We welcome contributions to improve the USDDWIN project. Please follow the guidelines below:
+- Fork the repository.
+- Create a new branch for your feature or bug fix.
+- Commit your changes and submit a pull request.
 
 ## License
+This project is licensed under the Apache License Version 2.0.
 
-This project is proprietary and managed by **Dwin Trust Limited**. Please contact us for licensing and integration details.
-
----
-
-## Contact
-
-For inquiries, visit our website or reach out to:  
-**Email**: support@dwintrust.com  
-**Address**: Level 17, Main Office Tower, Financial Park Complex, Labuan, Malaysia
+<!-- ## Contact
+For more information, visit our [website](https://usddwin.com) or reach out to our team at support@usddwin.com. -->
