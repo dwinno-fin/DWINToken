@@ -6,7 +6,7 @@ describe("DWINToken Contract", function () {
 
     beforeEach(async function () {
         // Deploy the contract
-        DWINToken = await ethers.getContractFactory("DWINTokenV2");
+        DWINToken = await ethers.getContractFactory("DWINToken");
         [owner, addr1, addr2] = await ethers.getSigners();
         dwinToken = await DWINToken.deploy("USD DWIN", "USDDW");
     });
@@ -155,5 +155,58 @@ describe("DWINToken Contract", function () {
             await expect(dwinToken.connect(addr1).transferFrom(owner.address, addr2.address, 500)).to.be.revertedWith("DWINToken: address is blacklisted");
         });
         
+    });
+
+    describe("Event Emissions", function () {
+        it("Should emit a Transfer event during minting", async function () {
+            await expect(dwinToken.mint(addr1.address, 1000))
+                .to.emit(dwinToken, "Transfer")
+                .withArgs(ethers.ZeroAddress, addr1.address, 1000);
+        });
+
+        it("Should emit a Transfer event during burning", async function () {
+            await dwinToken.mint(owner.address, 1000);
+            await expect(dwinToken.burn(500))
+                .to.emit(dwinToken, "Transfer")
+                .withArgs(owner.address, ethers.ZeroAddress, 500);
+        });
+
+        it("Should emit events when blacklisting or unblacklisting addresses", async function () {
+            await expect(dwinToken.blacklist(addr1.address))
+                .to.emit(dwinToken, "Blacklisted") // Assuming you add a Blacklisted event
+                .withArgs(addr1.address);
+
+            await expect(dwinToken.unblacklist(addr1.address))
+                .to.emit(dwinToken, "Unblacklisted") // Assuming you add an Unblacklisted event
+                .withArgs(addr1.address);
+        });
+    });
+
+    describe("Allowance and Approvals", function () {
+        it("Should correctly set and update allowances", async function () {
+            await dwinToken.approve(addr1.address, 1000);
+            expect(await dwinToken.allowance(owner.address, addr1.address)).to.equal(1000);
+
+            await dwinToken.approve(addr1.address, 500);
+            expect(await dwinToken.allowance(owner.address, addr1.address)).to.equal(500);
+        });
+
+        it("Should fail to transferFrom when allowance is insufficient", async function () {
+            await dwinToken.mint(owner.address, 1000);
+            await dwinToken.approve(addr1.address, 500);
+
+            await expect(dwinToken.connect(addr1).transferFrom(owner.address, addr2.address, 1000))
+                .to.be.reverted;
+        });
+    });
+
+    describe("View Functions", function () {
+        it("Should correctly report if an address is blacklisted", async function () {
+            await dwinToken.blacklist(addr1.address);
+            expect(await dwinToken.isBlacklisted(addr1.address)).to.be.true;
+
+            await dwinToken.unblacklist(addr1.address);
+            expect(await dwinToken.isBlacklisted(addr1.address)).to.be.false;
+        });
     });
 });
