@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
-import "hardhat/console.sol";
 
 /**
  * @title DWINToken
@@ -18,9 +17,7 @@ contract DWINTokenV2 is ERC20, Ownable, Pausable {
      * @param name The name of the token.
      * @param symbol The symbol of the token.
      */
-    constructor(string memory name, string memory symbol) ERC20(name, symbol) Ownable(msg.sender) {
-        console.log("Create From: ", msg.sender);
-    }
+    constructor(string memory name, string memory symbol) ERC20(name, symbol) Ownable(msg.sender) {}
 
     /**
      * @dev Modifier to check if the address is blacklisted.
@@ -37,7 +34,6 @@ contract DWINTokenV2 is ERC20, Ownable, Pausable {
      * @param amount The amount of tokens to mint.
      */
     function mint(address to, uint256 amount) external onlyOwner whenNotPaused notBlacklisted(to) {
-        console.log("Mint From: ", msg.sender);
         _mint(to, amount);
     }
 
@@ -54,6 +50,7 @@ contract DWINTokenV2 is ERC20, Ownable, Pausable {
      * @param account The address to blacklist.
      */
     function blacklist(address account) external onlyOwner {
+        require(account != address(0), "DWINToken: cannot blacklist the zero address");
         _blacklisted[account] = true;
     }
 
@@ -72,6 +69,20 @@ contract DWINTokenV2 is ERC20, Ownable, Pausable {
      */
     function isBlacklisted(address account) external view returns (bool) {
         return _blacklisted[account];
+    }
+
+    /**
+     * @dev Triggers the paused state.
+     */
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    /**
+     * @dev Returns to the normal state.
+     */
+    function unpause() external onlyOwner {
+        _unpause();
     }
 
     /**

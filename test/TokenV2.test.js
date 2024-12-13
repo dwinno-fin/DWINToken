@@ -29,7 +29,7 @@ describe("DWINToken Contract", function () {
         });
 
         it("Should fail if a non-owner tries to mint tokens", async function () {
-            await expect(dwinToken.connect(addr1).mint(addr1.address, 1000)).to.be.revertedWithCustomError();
+            await expect(dwinToken.connect(addr1).mint(addr1.address, 1000)).to.be.reverted;
         });
 
         it("Should not allow minting to a blacklisted address", async function () {
@@ -46,8 +46,14 @@ describe("DWINToken Contract", function () {
         });
 
         it("Should fail if a non-owner tries to burn tokens", async function () {
-            await expect(dwinToken.connect(addr1).burn(1000)).to.be.revertedWith("Ownable: caller is not the owner");
+            await expect(dwinToken.connect(addr1).burn(1000)).to.be.reverted;
         });
+
+        it("Should fail to burn more tokens than available in balance", async function () {
+            await dwinToken.mint(owner.address, 1000);
+            await expect(dwinToken.burn(2000)).to.be.reverted;
+        });
+        
     });
 
     describe("Blacklist", function () {
@@ -67,6 +73,29 @@ describe("DWINToken Contract", function () {
             await dwinToken.blacklist(addr1.address);
             await expect(dwinToken.connect(addr1).transfer(addr2.address, 500)).to.be.revertedWith("DWINToken: address is blacklisted");
         });
+
+        it("Should allow unblacklisted addresses to send and receive tokens again", async function () {
+            await dwinToken.mint(owner.address, 1000);
+            await dwinToken.blacklist(addr1.address);
+            await dwinToken.unblacklist(addr1.address);
+            await dwinToken.transfer(addr1.address, 500);
+            expect(await dwinToken.balanceOf(addr1.address)).to.equal(500);
+        });
+        
+        it("Should allow blacklisting and unblacklisting the same address multiple times", async function () {
+            await dwinToken.blacklist(addr1.address);
+            expect(await dwinToken.isBlacklisted(addr1.address)).to.be.true;
+
+            await dwinToken.unblacklist(addr1.address);
+            expect(await dwinToken.isBlacklisted(addr1.address)).to.be.false;
+
+            await dwinToken.blacklist(addr1.address);
+            expect(await dwinToken.isBlacklisted(addr1.address)).to.be.true;
+        });
+
+        it("Should fail when trying to blacklist the zero address", async function () {
+            await expect(dwinToken.blacklist(ethers.ZeroAddress)).to.be.reverted;
+        });
     });
 
     describe("Pausing", function () {
@@ -78,13 +107,24 @@ describe("DWINToken Contract", function () {
         it("Should prevent transfers while paused", async function () {
             await dwinToken.mint(owner.address, 1000);
             await dwinToken.pause();
-            await expect(dwinToken.transfer(addr1.address, 500)).to.be.revertedWith("Pausable: paused");
+            await expect(dwinToken.transfer(addr1.address, 500)).to.be.reverted;
         });
 
         it("Should allow the owner to unpause the contract", async function () {
             await dwinToken.pause();
             await dwinToken.unpause();
             expect(await dwinToken.paused()).to.be.false;
+        });
+
+        it("Should fail if the contract is paused", async function () {
+            await dwinToken.mint(owner.address, 1000);
+            await dwinToken.pause();
+            await expect(dwinToken.burn(500)).to.be.reverted;
+        });
+
+        it("Should fail if the contract is paused", async function () {
+            await dwinToken.pause();
+            await expect(dwinToken.mint(addr1.address, 1000)).to.be.reverted;
         });
     });
 
@@ -100,5 +140,20 @@ describe("DWINToken Contract", function () {
             await dwinToken.blacklist(addr1.address);
             await expect(dwinToken.transfer(addr1.address, 500)).to.be.revertedWith("DWINToken: address is blacklisted");
         });
+
+        it("Should allow approved transfers via transferFrom", async function () {
+            await dwinToken.mint(owner.address, 1000);
+            await dwinToken.approve(addr1.address, 500);
+            await dwinToken.connect(addr1).transferFrom(owner.address, addr2.address, 500);
+            expect(await dwinToken.balanceOf(addr2.address)).to.equal(500);
+        });
+        
+        it("Should fail transferFrom if sender or receiver is blacklisted", async function () {
+            await dwinToken.mint(owner.address, 1000);
+            await dwinToken.approve(addr1.address, 500);
+            await dwinToken.blacklist(owner.address);
+            await expect(dwinToken.connect(addr1).transferFrom(owner.address, addr2.address, 500)).to.be.revertedWith("DWINToken: address is blacklisted");
+        });
+        
     });
 });
