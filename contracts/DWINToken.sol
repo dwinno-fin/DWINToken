@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.28;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -68,6 +68,7 @@ contract DWINToken is ERC20, Ownable, Pausable {
      * @param account The address to remove from the blacklist.
      */
     function unblacklist(address account) external onlyOwner {
+        require(_blacklisted[account], "DWINToken: address is not blacklisted");
         _blacklisted[account] = false;
         emit Unblacklisted(account);
     }
