@@ -7,6 +7,8 @@ const ALCHEMY_API_KEY = vars.get("ALCHEMY_API_KEY");
 
 const PRIVATE_KEY = vars.get("PRIVATE_KEY");
 
+const OP_ETHERSCAN_API_KEY = vars.get("OP_ETHERSCAN_API_KEY");
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.28",
@@ -38,18 +40,18 @@ module.exports = {
   },
   etherscan: {
     apiKey: {
-      'optimism': 'abc',
+      optimisticEthereum: OP_ETHERSCAN_API_KEY,
     },
-    customChains: [
-      {
-        network: 'optimism',
-        chainId: 10,
-        urls: {
-          apiURL: 'https://optimism.blockscout.com/api',
-          browserURL: 'https://optimism.blockscout.com/',
-        },
-      },
-    ],
+    // customChains: [
+    //   {
+    //     network: 'optimism',
+    //     chainId: 10,
+    //     urls: {
+    //       apiURL: 'https://optimism.blockscout.com/api',
+    //       browserURL: 'https://optimism.blockscout.com/',
+    //     },
+    //   },
+    // ],
   },
   sourcify: {
     enabled: false,
