@@ -10,6 +10,8 @@ import "@openzeppelin/contracts/utils/Pausable.sol";
  * @dev ERC-20 Token with mint, burn, pause, and blacklist functionality.
  */
 contract DWINToken is ERC20, Ownable, Pausable {
+    uint256 public totalCollateral;
+
     mapping(address => bool) private _blacklisted;
 
     // Events
@@ -17,6 +19,8 @@ contract DWINToken is ERC20, Ownable, Pausable {
     event Unblacklisted(address indexed account);
     event TokensMinted(address indexed to, uint256 amount);
     event TokensBurned(address indexed from, uint256 amount);
+    event CollateralUpdated(uint256 newCollateral);
+
 
     /**
      * @dev Constructor that initializes the token name and symbol.
@@ -39,7 +43,8 @@ contract DWINToken is ERC20, Ownable, Pausable {
      * @param to The address to mint tokens to.
      * @param amount The amount of tokens to mint.
      */
-    function mint(address to, uint256 amount) external onlyOwner whenNotPaused notBlacklisted(to) {
+    function mint(address to, uint256 amount) external onlyOwner {
+        require(totalSupply() + amount <= totalCollateral, "Exceeds collateral backing");
         _mint(to, amount);
         emit TokensMinted(to, amount);
     }
@@ -81,6 +86,18 @@ contract DWINToken is ERC20, Ownable, Pausable {
     function isBlacklisted(address account) external view returns (bool) {
         return _blacklisted[account];
     }
+
+     // Function to update the total collateral from an off-chain source
+    function updateCollateral(uint256 _collateral) external onlyOwner {
+        totalCollateral = _collateral;
+        emit CollateralUpdated(_collateral);
+    }
+
+    // Function to get USD value of a specific token amount
+    function getTokenUSDValue(uint256 tokenAmount) public pure returns (uint256) {
+        return tokenAmount; // 1:1 USD backing
+    }
+
 
     /**
      * @dev Triggers the paused state.

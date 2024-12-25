@@ -41,17 +41,27 @@ module.exports = {
   etherscan: {
     apiKey: {
       optimisticEthereum: OP_ETHERSCAN_API_KEY,
+      'optimism': 'abc',
+      'opt_sepolia': OP_ETHERSCAN_API_KEY,
     },
-    // customChains: [
-    //   {
-    //     network: 'optimism',
-    //     chainId: 10,
-    //     urls: {
-    //       apiURL: 'https://optimism.blockscout.com/api',
-    //       browserURL: 'https://optimism.blockscout.com/',
-    //     },
-    //   },
-    // ],
+    customChains: [
+      // {
+      //   network: 'optimism',
+      //   chainId: 10,
+      //   urls: {
+      //     apiURL: 'https://optimism.blockscout.com/api',
+      //     browserURL: 'https://optimism.blockscout.com/',
+      //   },
+      // },
+      {
+        network: "opt_sepolia",
+        chainId: 11155420, // Sepolia-Optimism chain ID
+        urls: {
+          apiURL: "https://api-sepolia-optimism.etherscan.io/api",
+          browserURL: "https://sepolia-optimism.etherscan.io",
+        },
+      },
+    ],
   },
   sourcify: {
     enabled: false,
